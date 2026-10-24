@@ -64,6 +64,12 @@ class MinimaxAgent(Agent):
         """
         self.expanded_nodes += 1
 
+        #   - terminal state                -> 0
+        #   - depth == 0                    -> self.problem.heuristic(state)
+        #   - otherwise, the maximum over the legal actions of
+        #         reward + self.chance_value(afterstate, depth)
+        #     where (afterstate, reward) = self.problem.apply_action(state, action)
+
         if (self.problem.is_terminal(state)):
             return 0
 
@@ -77,14 +83,6 @@ class MinimaxAgent(Agent):
             max_score = max(max_score, score)
 
         return max_score
-        
-        # TODO (Parte 1): implement the MAX node.
-        #   - terminal state                -> 0
-        #   - depth == 0                    -> self.problem.heuristic(state)
-        #   - otherwise, the maximum over the legal actions of
-        #         reward + self.chance_value(afterstate, depth)
-        #     where (afterstate, reward) = self.problem.apply_action(state, action)
-        # raise NotImplementedError("Parte 1: implementar MinimaxAgent.max_value")
 
     def chance_value(self, afterstate: GameState, depth: int) -> float:
         """
@@ -95,6 +93,9 @@ class MinimaxAgent(Agent):
             afterstate: Board after the player's move, without the new tile
             depth: Depth of the move that produced this afterstate
         """
+
+        #   The minimum, over all the outcomes in self.problem.get_chance_outcomes(afterstate),
+        #   of self.max_value(next_state, depth - 1). Minimax ignores the probabilities.
 
         min_score = float('inf')
         for next_state, _score in self.problem.get_chance_outcomes(afterstate):
