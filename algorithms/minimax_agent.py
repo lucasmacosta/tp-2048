@@ -63,13 +63,28 @@ class MinimaxAgent(Agent):
             depth: Remaining player moves to look ahead (0 = use the heuristic)
         """
         self.expanded_nodes += 1
+
+        if (self.problem.is_terminal(state)):
+            return 0
+
+        if (depth == 0):
+            return self.problem.heuristic(state)
+
+        max_score = float('-inf')
+        for action in self.problem.get_actions(state):
+            afterstate, reward = self.problem.apply_action(state, action)
+            score = reward + self.chance_value(afterstate, depth)
+            max_score = max(max_score, score)
+
+        return max_score
+        
         # TODO (Parte 1): implement the MAX node.
         #   - terminal state                -> 0
         #   - depth == 0                    -> self.problem.heuristic(state)
         #   - otherwise, the maximum over the legal actions of
         #         reward + self.chance_value(afterstate, depth)
         #     where (afterstate, reward) = self.problem.apply_action(state, action)
-        raise NotImplementedError("Parte 1: implementar MinimaxAgent.max_value")
+        # raise NotImplementedError("Parte 1: implementar MinimaxAgent.max_value")
 
     def chance_value(self, afterstate: GameState, depth: int) -> float:
         """
@@ -80,8 +95,10 @@ class MinimaxAgent(Agent):
             afterstate: Board after the player's move, without the new tile
             depth: Depth of the move that produced this afterstate
         """
-        # TODO (Parte 1): implement the MIN node.
-        #   The minimum, over all the outcomes in self.problem.get_chance_outcomes(afterstate),
-        #   of self.max_value(next_state, depth - 1). Minimax ignores the probabilities.
-        raise NotImplementedError("Parte 1: implementar MinimaxAgent.chance_value")
+
+        min_score = float('inf')
+        for next_state, _score in self.problem.get_chance_outcomes(afterstate):
+            max_value = self.max_value(next_state, depth - 1)
+            min_score = min(min_score, max_value)
+        return min_score
 
