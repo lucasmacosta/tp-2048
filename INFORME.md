@@ -1,6 +1,6 @@
 # Informe: agentes para el 2048 simplificado
 
-Integrantes: [completar]
+Integrantes: Dámaris Acevedo, Lucas Acosta
 
 ## 1. Comparación
 
